@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title></title>
+    <style type="text/css">
+        body {
+            font-family: "Helvetica Neue", "Georgia", serif;
+            font-size: 24px;
+            font-weight: 200;
+            text-align: center;
+        }
+        h1 {
+            font-weight: 200;
+        }
+        form table {
+            background-color: #F8FFF8;
+            border: 1px solid #000;
+            margin: auto;
+            padding: 15px;
+        }
+        form td {
+            padding: 5px 10px;
+            width: 250px
+        }
+        form select, form input[type=text] {
+            font-family: "Courier";
+            font-size: 16px;
+            padding: 5px;
+        }
+        form input[type=text] {
+            text-align: right;
+            width: 3em;
+        }
+        form td:first-child {
+            text-align: right;
+        }
+        form td:last-child {
+            font-size: 18px;
+            text-align: left;
+        }
+        form tr:last-child td {
+            text-align: center;
+        }
+        form input[type=submit] {
+            font-family: "Helvetica Neue", "Georgia", serif;
+            font-size: 24px;
+            font-weight: 200;
+        }
+    </style>
+</head>
+<body>
+    <h1>Planet Wars</h1>
+    <form action="/create-game" method="POST">
+        <table cellspacing=0>
+            <tr>
+                <td><label for="player1">Player 1:</label></td>
+                <td>
+                    <select name="p1" id="player1">{% for ai_name in ai_names %}
+                        <option{% if ai_name == "Random" %} selected{% endif %}>{{ ai_name }}</option>{% endfor %}
+                    </select>
+                </td>
+            </tr>
+            <tr>
+                <td><label for="player2">Player 2:</label></td>
+                <td>
+                    <select name="p2" id="player2">{% for ai_name in ai_names %}
+                        <option{% if ai_name == "Random" %} selected{% endif %}>{{ ai_name }}</option>{% endfor %}
+                    </select>
+                </td>
+            </tr>
+            <tr>
+                <td><label for="map">Map:</label></td>
+                <td>
+                  <select name="map" id="map">
+		    <option>Generate</option>
+                    <option>Random</option>{% for map_name in map_names %}
+                    <option>{{ map_name }}</option>{% endfor %}
+                    </select>
+                </td>
+            </tr>
+            <tr>
+                <td><label for="tps">Turns/Sec:</label></td>
+                <td><input type="text" name="tps" id="tps" value="8"></td>
+            </tr>
+            <tr>
+                <td><label for="collisions">Collisions:</label></td>
+                <td>
+					<select name="collisions" id="collisions">
+					<option>False</option>
+                    <option>True</option>
+                    </select>
+                </td>
+            </tr>
+            <tr><td colspan=2><input type="submit" value="Create Game" /></td></tr>
+        </table>
+    </form>
+</body>
+</html>

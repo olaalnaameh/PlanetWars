@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title></title>
+    <style type="text/css">
+        body {
+            text-align: center;
+        }
+        canvas {
+        background-color: #000000;
+        }
+        #outer {
+            display: inline-block;
+            position: relative;
+        }
+        #overlay {
+            height: 100%;
+            left: 0px;
+            position: absolute;
+            top: 0px;
+            width: 100%;
+        }
+        #info {
+            color: #FFF;
+            display: none;
+            font-family: "Courier New", Courier, monospace;
+            font-size: 13px;
+            padding-top: 5px;
+            position: relative;
+            text-align: center;
+        }
+        #info span {
+            font-size: 13px;
+        }
+    </style>
+    <script src="/static/js/socket.io.js"></script>
+    <script src="/static/js/planetwars.js"></script>
+    <script>
+        function main() {
+            var gameID = "{{ gameID }}";
+            var socket = io.connect("/game");
+            var canvas = document.getElementById("game");
+            var ctx = canvas.getContext("2d");
+            socket.on("initialize", function(msg) {
+                var data = JSON.parse(msg);
+                planetwars = new PlanetWars(ctx, data.planets, data.turnsPerSecond);
+                for (var i = 1; i <= data.players.length; i++) {
+                    var p = document.getElementById("p" + i);
+                    p.textContent = data.players[i - 1];
+                    p.style.color = PLAYER_COLORS[i][0];
+                }
+                document.getElementById("map").textContent = data.map;
+                document.getElementById("info").style.display = "block";
+            });
+            socket.on("update", function(msg) {
+                var data = JSON.parse(msg);
+                planetwars.addData(data);
+            });
+            socket.on("gameOver", function(msg) {
+                planetwars.gameOver = true;
+            });
+            socket.emit("join", gameID);
+        }
+    </script>
+</head>
+<body>
+    <div id=outer>
+        <canvas id=game width="800" height="800"></canvas>
+        <div id=overlay>
+            <div id=info>
+                <span id=p1></span> vs <span id=p2></span> in <span id=map></span>
+            </div>
+        </div>
+    </div>
+    <script>main()</script>
+</body>
+</html>
